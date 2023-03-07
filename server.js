@@ -1,6 +1,6 @@
 const express = require('express');
 const allRoutes = require('./data.json');
-const results = [];
+let results = [];
 
 const app = express();
 app.use(express.json());
@@ -16,7 +16,8 @@ app.get('/api/flights/results', (req, res) => {
 });
 
 // Choosing two locations and getting all available flights between these locations:
-app.post('/api/flights', (req, res) => {
+app.post('/api/flights-by-location', (req, res) => {
+    results = [];
     const location1 = req.body[0];
     const location2 = req.body[1];
 
@@ -30,11 +31,54 @@ app.post('/api/flights', (req, res) => {
             return -1;
         }
     });
-
-    // res.setHeader('Location', '/api/flights/results');
+    
     res
         .status(201)
         .send(results);
+})
+
+// Getting flights depending on given date
+app.post('/api/flights-by-date', (req, res) => {
+    results = [];
+    const date = req.body[0];
+
+    allRoutes.forEach(route => {
+        const filteredItineraries = route.itineraries.filter(itinerary => itinerary.departureAt.includes(date));
+        if (filteredItineraries.length !== 0) results.push({
+            route_id: route.route_id,
+            departureDestination: route.departureDestination,
+            arrivalDestination: route.arrivalDestination,
+            itineraries: filteredItineraries
+        })
+    })
+
+    res
+        .status(201)
+        .send(results);
+})
+
+// Book a flight
+app.post('/api/flights', (req, res) => {
+    results = [];
+    const fromLocation = req.body.fromLocation;
+    const toLocation = req.body.toLocation;
+    const date = req.body.date;
+    const time = req.body.time;
+    const quantity = req.body.quantity;
+
+    allRoutes.forEach(route => {
+        if (route.departureDestination === fromLocation && route.arrivalDestination === toLocation) {
+            const flightToBook = route.itineraries[route.itineraries.findIndex(itinerary => itinerary.departureAt === `${date}T${time}.000Z`)];
+            // if (quantity > 1 && flightToBook.availableSeats - quantity < 0) return new Error('There are not enough seats available.');
+            // if (flightToBook.availableSeats === 0) return new Error('Flight is full.');
+            flightToBook.availableSeats -= quantity;
+            return results.push(flightToBook);
+        }
+    })
+
+    res
+        .status(201)
+        // .send(results);
 })
 
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
