@@ -69,16 +69,25 @@ app.post('/api/flights', (req, res) => {
     allRoutes.forEach(route => {
         if (route.departureDestination === fromLocation && route.arrivalDestination === toLocation) {
             const flightToBook = route.itineraries[route.itineraries.findIndex(itinerary => itinerary.departureAt === `${date}T${time}.000Z`)];
-            // if (quantity > 1 && flightToBook.availableSeats - quantity < 0) return new Error('There are not enough seats available.');
-            // if (flightToBook.availableSeats === 0) return new Error('Flight is full.');
+            if (!flightToBook) {
+                return res.status(401).send('Sorry, there are no flights for the desired times.');
+            }
+            if (quantity > 1 && flightToBook.availableSeats - quantity < 0) {
+                return res.status(401).send('Sorry, there are not enough seats available.');
+            }
+            if (flightToBook.availableSeats === 0) {
+                return res.status(401).send('Sorry, the flight is full.');
+            }
             flightToBook.availableSeats -= quantity;
             return results.push(flightToBook);
         }
     })
 
-    res
-        .status(201)
-        // .send(results);
+    if (results.length === 0) {
+        return res.status(401).send('Sorry, there are no flights for these locations.');
+    }
+
+    return res.status(201).send(results);
 })
 
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
