@@ -1,11 +1,11 @@
 const express = require('express');
 const allRoutes = require('./data.json');
-let results = [];
 
 const app = express();
 app.use(express.json());
 
 const PORT = process.env.PORT || 4000;
+let results = [];
 
 app.get('/api/flights', (req, res) => {
     res.send(allRoutes);
@@ -15,7 +15,9 @@ app.get('/api/flights/results', (req, res) => {
     res.send(results);
 });
 
-// Choosing two locations and getting all available flights between these locations:
+// Choosing two locations and getting all available flights between these locations
+// In the request body, needs to receive an array with two locations as strings
+
 app.post('/api/flights-by-location', (req, res) => {
     results = [];
     const location1 = req.body[0];
@@ -38,6 +40,8 @@ app.post('/api/flights-by-location', (req, res) => {
 })
 
 // Getting flights depending on given date
+// In the request body, needs to receive an array with the date as a string in the format "yyyy-mm-dd"
+
 app.post('/api/flights-by-date', (req, res) => {
     results = [];
     const date = req.body[0];
@@ -51,13 +55,19 @@ app.post('/api/flights-by-date', (req, res) => {
             itineraries: filteredItineraries
         })
     })
-
-    res
-        .status(201)
-        .send(results);
+    res.status(201).send(results);
 })
 
 // Book a flight
+// In the request body, needs to receive an object like the following: 
+/* {
+    fromLocation:"Oslo",
+    toLocation:"Stockholm",
+    date:"2023-03-29",
+    time:"11:00:00",
+    quantity:1
+} */
+
 app.post('/api/flights', (req, res) => {
     results = [];
     const fromLocation = req.body.fromLocation;
@@ -81,12 +91,25 @@ app.post('/api/flights', (req, res) => {
             flightToBook.availableSeats -= quantity;
             return results.push(flightToBook);
         }
+
     })
 
+    // Getting layovers, should not be in the booking endpoint
     if (results.length === 0) {
-        return res.status(401).send('Sorry, there are no flights for these locations.');
+        const departureArray = allRoutes.filter(route => route.departureDestination === fromLocation);
+        const arrivalArray = allRoutes.filter(route => route.arrivalDestination === toLocation);
+        const resultArray = arrivalArray.filter(arrRoute => departureArray.some(depRoute => arrRoute.departureDestination === depRoute.arrivalDestination));
+        results = resultArray.concat(departureArray.filter(depRoute => arrivalArray.some(arrRoute => depRoute.arrivalDestination === arrRoute.departureDestination)));
+        if (results.length === 0) {
+            return res.status(401).send('Sorry, there are no flights for these locations.');
+        }
+        results.sort(a => {
+            if (a.departureDestination === fromLocation) {
+                return -1;
+            }
+        });
     }
-
+    // Returns the booked flight and updates the available seats. Regarding layovers, just returns the search results.
     return res.status(201).send(results);
 })
 
