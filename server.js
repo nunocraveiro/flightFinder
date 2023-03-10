@@ -94,20 +94,45 @@ app.post('/api/flights', (req, res) => {
 
     })
 
-    // Getting layovers, should not be in the booking endpoint
+    // Getting layovers
     if (results.length === 0) {
-        const departureArray = allRoutes.filter(route => route.departureDestination === fromLocation);
-        const arrivalArray = allRoutes.filter(route => route.arrivalDestination === toLocation);
-        const resultArray = arrivalArray.filter(arrRoute => departureArray.some(depRoute => arrRoute.departureDestination === depRoute.arrivalDestination));
-        results = resultArray.concat(departureArray.filter(depRoute => arrivalArray.some(arrRoute => depRoute.arrivalDestination === arrRoute.departureDestination)));
-        if (results.length === 0) {
+        let departureArray = allRoutes.filter(route => route.departureDestination === fromLocation);
+        let arrivalArray = allRoutes.filter(route => route.arrivalDestination === toLocation);
+        const layoverArray = [];
+
+        if (departureArray.length === 0 || arrivalArray.length === 0) {
             return res.status(401).send('Sorry, there are no flights for these locations.');
         }
-        results.sort(a => {
-            if (a.departureDestination === fromLocation) {
-                return -1;
-            }
-        });
+
+        const getHours = (dateTime) => {
+            return dateTime.slice(11, 13);
+        }
+        const getMinutes = (dateTime) => {
+            return dateTime.slice(14, 16);
+        }
+
+        departureArray =  departureArray.filter(depRoute => arrivalArray.some(arrRoute => depRoute.arrivalDestination === arrRoute.departureDestination));
+        arrivalArray = arrivalArray.filter(arrRoute => departureArray.some(depRoute => arrRoute.departureDestination === depRoute.arrivalDestination));
+
+        departureArray.forEach(depRoute => {
+            const departureLayover = depRoute.itineraries[depRoute.itineraries.findIndex(itinerary => itinerary.departureAt === `${date}T${time}.000Z`)];
+            const arrivalRoute = arrivalArray.find(arrRoute => arrRoute.departureDestination === depRoute.arrivalDestination);
+            const arrivalLayover = arrivalRoute.itineraries[arrivalRoute.itineraries.findIndex(itinerary => (getHours(itinerary.departureAt)-getHours(departureLayover.arrivalAt)>0))];
+            layoverArray.push({
+                route_id: depRoute.route_id,
+                departureDestination: depRoute.departureDestination,
+                arrivalDestination: depRoute.arrivalDestination,
+                flight: departureLayover
+            });
+            layoverArray.push({
+                route_id: arrivalRoute.route_id,
+                departureDestination: arrivalRoute.departureDestination,
+                arrivalDestination: arrivalRoute.arrivalDestination,
+                flight: arrivalLayover
+            });
+            layoverArray.push(`Waiting time between flights is ${getHours(arrivalLayover.departureAt)-getHours(departureLayover.arrivalAt)} hours and ${getMinutes(arrivalLayover.departureAt)-getMinutes(departureLayover.arrivalAt)} minutes.`);
+            results.push(layoverArray);
+        })
     }
     // Returns the booked flight and updates the available seats. Regarding layovers, just returns the search results.
     return res.status(201).send(results);
