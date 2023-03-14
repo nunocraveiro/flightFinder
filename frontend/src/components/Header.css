@@ -1,0 +1,17 @@
+.header {
+    font-family: 'Josefin Sans', sans-serif;
+    height: 6rem;
+}
+
+.logo {
+    padding-left: 2rem;
+    padding-top: 2.3rem;
+    font-size: 3.5rem;
+    font-weight: 500;
+    color: white;
+}
+
+.material-symbols-outlined {
+    margin-left: 1.2rem;
+    transform: scale(1.2) rotate(90deg);
+}

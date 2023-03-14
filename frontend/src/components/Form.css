@@ -1,0 +1,132 @@
+.form-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.form {
+    align-self: center;
+    margin-top: 2.5rem;
+    width: 50rem;
+    /* height: 10rem; */
+    height: 30rem;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.from-to {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding-top: 3rem;
+    height: 30rem;
+}
+
+.input-container {
+    border: 0.5px solid black;
+    width: 18rem;
+    height: 3.5rem;
+    border-radius: 4px;
+    padding-left: 1rem;
+    padding-right: 0.5rem;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    user-select: none;
+    cursor: text;
+}
+
+.input-label {
+    top: 0.9rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    font-size: 1.2rem;
+    position: relative;
+}
+
+.animate {
+    animation-name: form-activate;
+    animation-duration: 0.2s;
+    animation-fill-mode: forwards;
+}
+
+.deanimate {
+    animation-name: form-deactivate;
+    animation-duration: 0.2s;
+    animation-fill-mode: forwards;
+}
+
+.form-input {
+    border: none;
+    outline: none;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 300;
+}
+
+.hide {
+    visibility: hidden;
+}
+.show {
+    visibility: visible;
+}
+
+@keyframes form-activate {
+    0% {
+        top: 0.9rem;
+        font-size: 1.2rem;
+    }
+    100% {
+        top: 0rem;
+        font-size: 0.9rem;
+    }
+}
+@keyframes form-deactivate {
+    0% {
+        top: 0rem;
+        font-size: 0.9rem;
+    }
+    100% {
+        top: 0.9rem;
+        font-size: 1.2rem;
+    }
+}
+
+.second-form {
+    position: relative;
+    top: -21.5rem;
+}
+
+.trip-type {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1.9rem;
+    margin-left: 4.7rem;
+}
+
+.trip-type input {
+    margin-right: 0.4rem;
+    cursor: pointer;
+    accent-color: blue;
+    height: 1.3rem;
+    width: 1.3rem;
+}
+.trip-type label {
+    margin-right: 1.2rem;
+    cursor: pointer;
+    margin-top: 0.3rem;
+    font-family: 'Nunito Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.95rem;
+}
+
+.date-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
