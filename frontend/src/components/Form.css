@@ -8,26 +8,26 @@
     align-self: center;
     margin-top: 2.5rem;
     width: 50rem;
-    /* height: 10rem; */
-    height: 30rem;
+    height: 25.5rem;
     background: rgba(255, 255, 255, 0.2);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
+    overflow: hidden;
 }
 
 .from-to {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: center;
     padding-top: 3rem;
     height: 30rem;
 }
 
 .input-container {
-    border: 0.5px solid black;
+    border: 1px solid rgb(144, 144, 144);
     width: 18rem;
     height: 3.5rem;
     border-radius: 4px;
@@ -39,6 +39,19 @@
     justify-content: space-evenly;
     user-select: none;
     cursor: text;
+}
+
+.swapIcon {
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+    padding-top: 0.2rem;
+    margin-top: 0.65rem;
+    height: 2rem;
+    width: 2rem;
+    margin-left: 1.4rem;
+    margin-right: 1.4rem;
+    color: rgb(50, 50, 50);
 }
 
 .input-label {
@@ -128,18 +141,16 @@
 .date-form {
     display: flex;
     flex-direction: row;
-    /* justify-content: space-evenly; */
     margin-left: 4.6rem;
 }
 
 .date-picker {
-    /* width: 20.4rem; */
     width: 20.15rem;
     margin-right: 0.5rem !important;
     outline: none;
     background-color: white;
     border-radius: 4px;
-    border: 0.5px solid black !important;
+    border: 1px solid rgb(144, 144, 144) !important;
     height: 3.5rem;
     padding-left: 0.1rem !important;
 }
@@ -164,7 +175,6 @@
 }
 
 .date-label {
-    font-size: 1rem;
     position: relative;
     top: 1.45rem;
     left: 1rem;
@@ -172,4 +182,92 @@
     font-family: 'Josefin Sans', sans-serif;
     font-weight: 300;
     font-size: 0.9rem;
+}
+
+.quantity {
+    background-color: white;
+    width: 20.15rem;
+    height: 6.4rem;
+    border-radius: 4px;
+    margin-left: 4.6rem;
+    border: 1px solid rgb(144, 144, 144);
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+}
+
+.quantity-label {
+    position: relative;
+    top: 0.5rem;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300;
+    font-size: 0.9rem;
+    width: 4.6rem;
+    height: 1rem;
+    overflow: hidden;
+    margin-bottom: 0.8rem;
+}
+
+.quantity-input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.6rem;
+    border: 1px solid white;
+}
+
+.quantity-input-container p {
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.number-container {
+    display: flex;
+    flex-direction: row;
+    height: 1.5rem;
+    width: 5rem;
+    margin-right: 0.45rem;
+}
+
+.number-button {
+    align-self: center;
+    cursor: pointer;
+    line-height: 19px;
+    text-align: center;
+    height: 1.2rem;
+    width: 1.2rem;
+    border-radius: 4px;
+    background-color: #216ba5;
+    color: white;
+    font-weight: 500 !important;
+    user-select: none;
+}
+
+.number {
+    width: 1.3rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding-top: 0.1rem;
+    align-self: center;
+    text-align: center;
+    user-select: none;
+}
+
+.search {
+    cursor: pointer;
+    width: 6rem;
+    height: 2.5rem;
+    text-align: center;
+    padding-top: 0.2rem;
+    border: none;
+    border-radius: 12px;
+    position: relative;
+    left: 39.4rem;
+    bottom: 2.6rem;
+    background-color: #216ba5;
+    color: white;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 400;
 }

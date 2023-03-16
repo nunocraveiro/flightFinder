@@ -1,8 +1,12 @@
-const express = require('express');
-const allRoutes = require('./data.json');
+/* const express = require('express');
+const allRoutes = require('./data.json'); */
+import express from 'express';
+import allRoutes from './data.json' assert { type: "json" };
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 const PORT = process.env.PORT || 4000;
 let results = [];
@@ -73,13 +77,18 @@ app.post('/api/flights', (req, res) => {
     const fromLocation = req.body.fromLocation;
     const toLocation = req.body.toLocation;
     const date = req.body.date;
-    const time = req.body.time;
-    const quantity = req.body.quantity;
+    const time = req.body.time ? req.body.time : "11:00:00";
+    const quantity = req.body.quantity ? req.body.quantity : 1;
 
     allRoutes.forEach(route => {
         if (route.departureDestination === fromLocation && route.arrivalDestination === toLocation) {
-            const flightToBook = route.itineraries[route.itineraries.findIndex(itinerary => itinerary.departureAt === `${date}T${time}.000Z`)];
-            if (!flightToBook) {
+            // const flightToBook = route.itineraries[route.itineraries.findIndex(itinerary => itinerary.departureAt === `${date}T${time}.000Z`)];
+            results = route.itineraries.filter(itinerary => itinerary.departureAt.includes(`${date}`));
+            if (results === []) {
+                return res.status(401).send('Sorry, there are no flights for the desired dates.');
+            }
+            return results;
+            /* if (!flightToBook) {
                 return res.status(401).send('Sorry, there are no flights for the desired times.');
             }
             if (quantity > 1 && flightToBook.availableSeats - quantity < 0) {
@@ -89,7 +98,7 @@ app.post('/api/flights', (req, res) => {
                 return res.status(401).send('Sorry, the flight is full.');
             }
             flightToBook.availableSeats -= quantity;
-            return results.push(flightToBook);
+            return results.push(flightToBook); */
         }
 
     })
